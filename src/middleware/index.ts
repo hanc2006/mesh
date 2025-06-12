@@ -1,12 +1,13 @@
-import z, { ZodObject } from "zod";
+import z, { ZodObject } from 'zod';
 import {
   SchemaContract,
   InferSchema,
   ZodShape,
-  Method,
-} from "../contract/index";
-import { HttpRequest } from "../server/index";
-import { IncomingHeaders } from "../standard/request.header";
+  Method
+} from '../contract/index';
+import { HttpRequest } from '../server/index';
+import { IncomingHeaders } from '../standard/request.header';
+import { UnionToIntersection } from '../types';
 
 export type Middleware<
   Input extends MiddlewareContext<
@@ -38,12 +39,6 @@ export type MiddlewareContext<
 // Intersects all middleware outputs into a single `data` type
 export type MergeMiddlewareOutput<M extends Array<Middleware<any, any>>> =
   M extends Array<Middleware<any, infer R>> ? UnionToIntersection<R> : {};
-
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
-  k: infer I
-) => void
-  ? I
-  : never;
 
 export type InferMiddleware<T> = T extends (
   options: infer Opt
