@@ -33,7 +33,9 @@ app
 
 .use((req, res) => console.log('Hello World!'))
 
-.catch((e, req, res) => res.status(e.status ?? 500).json({ message: e.message ?? 'Internal server error' }))
+.onError((e, req, res) =>
+  res.status(e.status ?? 500).json({ message: e.message ?? 'Internal server error' })
+)
 
 .notFound((req, res) => res.status(404).end())
 
