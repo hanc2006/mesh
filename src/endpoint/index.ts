@@ -122,3 +122,4 @@ export function createEndpoint<
 
   return builder.handler(opts.handler);
 }
+export { ClassEndpoint } from "./class-endpoint";
