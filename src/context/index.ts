@@ -1,4 +1,4 @@
-import z, { ZodType } from "zod";
+import { z, ZodType } from "zod";
 import {
   InferSchema,
   Method,

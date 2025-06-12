@@ -19,7 +19,7 @@ export const jsonContract = createContract({
     body: {
       name: z.string(),
       age: z.number(),
-      email: z.string().email(),
+      email: z.email(),
     },
     headers: {
       "content-type": z.string().optional(),
@@ -78,7 +78,7 @@ export const uploadContract = createContract({
   path: "/api/upload",
   input: {
     body: {
-      file: z.instanceof(File),
+      file: z.file(),
       description: z.string().optional(),
       category: z.string(),
     },
@@ -91,7 +91,7 @@ export const uploadContract = createContract({
       fileId: z.string(),
       filename: z.string(),
       size: z.number(),
-      url: z.string().url(),
+      url: z.url(),
     },
   },
 });

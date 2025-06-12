@@ -94,7 +94,7 @@ const uploadContract = createContract({
   input: {
     type: "upload",
     body: {
-      file: z.instanceof(File),
+      file: z.file(),
       description: z.string().optional(),
     },
     headers: {
