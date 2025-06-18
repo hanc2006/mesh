@@ -2,10 +2,17 @@
   "name": "@ionited/mesh",
   "version": "0.6.5",
   "description": "A fast web framework based on uWebSocket.js",
-  "main": "./dist/mesh.js",
+  "main": "./build/mesh.js",
   "scripts": {
     "build": "tsc",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "lint": "gts lint",
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -38,11 +45,12 @@
     "zod-to-json-schema": "^3.24.5"
   },
   "devDependencies": {
-    "@types/node": "^22.12.0",
+    "@types/node": "^22.7.5",
     "tsx": "4.19.4",
-    "typescript": "^5.7.3"
+    "typescript": "^5.6.3",
+    "gts": "^6.0.2"
   },
   "files": [
-    "dist/*"
+    "build/*"
   ]
 }
