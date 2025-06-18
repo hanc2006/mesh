@@ -4,19 +4,11 @@
   "description": "A fast web framework based on uWebSocket.js",
   "main": "./build/mesh.js",
   "scripts": {
-    "build": "tsc",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "typecheck": "tsc --noEmit",
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc",
-    "fix": "gts fix",
-    "prepare": "npm run compile",
-    "pretest": "npm run compile",
-    "posttest": "npm run lint"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ionited/mesh.git"
+    "fix": "gts fix"
   },
   "keywords": [
     "Web",
@@ -29,10 +21,6 @@
   ],
   "author": "Ion",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ionited/mesh/issues"
-  },
-  "homepage": "https://github.com/ionited/mesh#readme",
   "dependencies": {
     "openapi-types": "^12.1.3",
     "openapi3-ts": "^4.4.0",
