@@ -1,4 +1,4 @@
-import { LevelWithSilent } from "pino";
+import { LevelWithSilent } from 'pino';
 
 export interface LoggerSettings {
   level?: LevelWithSilent;

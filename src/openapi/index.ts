@@ -1,11 +1,7 @@
-import {
-  ParameterLocation,
-  ParameterObject,
-  SchemaObject,
-} from "openapi3-ts/oas31";
-import { zodToJsonSchema } from "zod-to-json-schema";
-import { ZodObject } from "zod";
-import { ZodShape } from "../contract";
+import { ParameterLocation, ParameterObject, SchemaObject } from 'openapi3-ts/oas31';
+import { ZodObject } from 'zod';
+import { zodToJsonSchema } from 'zod-to-json-schema';
+import { ZodShape } from '../contract';
 
 // export function generateOpenApiSpecFromEndpoints(
 //   endpoints: Array<ReturnType<typeof endpoint>>
@@ -142,7 +138,7 @@ export const zodSchemaToOpenApiParams = <T extends ZodShape>(
       in: _in,
       name: key,
       schema: zodToJsonSchema(schema.shape[key]) as SchemaObject,
-      required: !schema.shape[key].isOptional(),
+      required: !schema.shape[key].isOptional()
     });
   }
 

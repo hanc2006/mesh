@@ -1,7 +1,7 @@
-import { getUserContract } from "./example-contract";
-import { endpoint } from "../endpoint/index";
-import { middleware, Middleware } from "../middleware/index";
-import { createRouter } from "../router/index";
+import { endpoint } from '../endpoint/index';
+import { Middleware, middleware } from '../middleware/index';
+import { createRouter } from '../router/index';
+import { getUserContract } from './example-contract';
 
 type UserContract = typeof getUserContract;
 
@@ -25,21 +25,20 @@ const auth = middleware()
   .handler(async (ctx, opts) => {
     const token = ctx.headers.authorization;
     if (!token && opts.required) {
-      throw new Error("Missing token");
+      throw new Error('Missing token');
     }
-    return { userId: "abc-123" };
+    return { userId: 'abc-123' };
   });
 
-const geoMiddleware: Middleware<any, { region: string }> = async (ctx) => {
-  const region = ctx.query.region ?? "eu-central";
+const geoMiddleware: Middleware<any, { region: string }> = async ctx => {
+  const region = ctx.query.region ?? 'eu-central';
   return { region };
 };
 
 const adminRouter = createRouter()
-  .base("/admin")
+  .base('/admin')
   .middlewares([auth({ required: true }), geoMiddleware])
   .build();
-
 
 endpoint({ contract: getUserContract })
   // .router(adminRouter)
@@ -47,15 +46,15 @@ endpoint({ contract: getUserContract })
   // .use(auth({ required: true }))
   // .use(geoMiddleware)
 
-  .handler(async (ctx) => {
+  .handler(async ctx => {
     if (!ctx.params.id) {
-      return ctx.error("ERR_FROM_PDF_API");
+      return ctx.error('ERR_FROM_PDF_API');
     }
     ctx.data; // typed as string ✅
-    return { 
-      id: "123", 
-      name: "John Doe",
-      email: "john.doe@example.com",
+    return {
+      id: '123',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
       createdAt: new Date().toISOString()
     };
   });

@@ -1,21 +1,17 @@
-import { ZodType, ZodTypeAny } from "zod";
-import { HttpResponse } from "./response";
-import { ContentType, contentTypes } from "../types";
-import { HttpError, HttpStatus, HttpSuccessStatus } from "../errors";
-import { Method, SchemaContract, ZodShape } from "../contract";
+import { ZodType, ZodTypeAny } from 'zod';
+import { Method, SchemaContract, ZodShape } from '../contract';
+import { HttpError, HttpStatus, HttpSuccessStatus } from '../errors';
+import { ContentType, contentTypes } from '../types';
+import { HttpResponse } from './response';
 
-export function validate<T>(
-  input: ZodShape,
-  data: T,
-  requestId: string
-) {
+export function validate<T>(input: ZodShape, data: T, requestId: string) {
   for (const key in data) {
     const schema = input[key];
     const result = schema.safeParse(data[key]);
     if (!result.success) {
       throw new HttpError(
         500,
-        "ERR_RESPONSE_VALIDATION",
+        'ERR_RESPONSE_VALIDATION',
         `Validation failed for request ${requestId} with error: ${result.error.issues}`
       );
     }
@@ -26,25 +22,20 @@ export function getSchemaAndType(def: unknown): {
   schema?: ZodTypeAny;
   type: ContentType;
 } {
-  if (!def) return { type: "json" };
+  if (!def) return { type: 'json' };
 
-  if (
-    typeof def === "object" &&
-    def !== null &&
-    "schema" in def &&
-    "type" in def
-  ) {
+  if (typeof def === 'object' && def !== null && 'schema' in def && 'type' in def) {
     return {
       schema: (def as any).schema,
-      type: (def as any).type,
+      type: (def as any).type
     };
   }
 
   if (def instanceof ZodType) {
-    return { schema: def, type: "json" };
+    return { schema: def, type: 'json' };
   }
 
-  return { type: "json" };
+  return { type: 'json' };
 }
 
 export function validateAndRespond(
@@ -59,18 +50,17 @@ export function validateAndRespond(
     if (!result.success) {
       // logError(`[Server] Response validation failed`, result.error.issues);
       res.status(500).json({
-        code: "ERR_INTERNAL_SERVER_ERROR",
-        message: "Response validation failed.",
+        code: 'ERR_INTERNAL_SERVER_ERROR',
+        message: 'Response validation failed.'
       });
       return;
     }
     data = result.data;
   }
 
-  const mimeType = contentTypes["json"];
+  const mimeType = contentTypes['json'];
   res.status(status).buildResponse({ type: mimeType, schema }, data, validate);
 }
-
 
 export function resolveResponse<
   C extends SchemaContract<Method, any, any, any, any, any>
@@ -81,7 +71,6 @@ export function resolveResponse<
     const { schema } = getSchemaAndType(errorDef);
 
     if (!errorDef || !schema) {
-
       res.status(status).json({ code, message });
       return;
     }
@@ -106,7 +95,7 @@ export function resolveResponse<
 
   // logError(`Handler for ${contract.path} returned unknown shape`, data);
 
-  const fallback = new HttpError(500, "ERR_FROM_LINECHECK_API");
+  const fallback = new HttpError(500, 'ERR_FROM_LINECHECK_API');
   const def = contract.responses[500];
   const { schema } = getSchemaAndType(def);
 

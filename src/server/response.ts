@@ -1,7 +1,7 @@
-import { readFile } from "fs/promises";
-import { getMime } from "./mime";
-import { HTTP_SERVICE_ERROR_CODES, HttpErrorCode, HttpStatus } from "../errors";
-import { BodySchema, bodyType } from "../endpoint/output";  
+import { readFile } from 'fs/promises';
+import { BodySchema, bodyType } from '../endpoint/output';
+import { HTTP_SERVICE_ERROR_CODES, HttpErrorCode, HttpStatus } from '../errors';
+import { getMime } from './mime';
 
 export class HttpResponse<T = any> {
   /**
@@ -120,9 +120,9 @@ export class HttpResponse<T = any> {
     try {
       const file = await readFile(path);
 
-      this.header("Content-Type", getMime(path)).text(file.toString());
+      this.header('Content-Type', getMime(path)).text(file.toString());
     } catch (e) {
-      this.status(404).text("Not found");
+      this.status(404).text('Not found');
     }
   }
 
@@ -157,7 +157,7 @@ export class HttpResponse<T = any> {
         //   { issues: validation.error.issues, dataProvided: data }
         // );
 
-        this.status(500).error("ERR_VALIDATION_PARAMS");
+        this.status(500).error('ERR_VALIDATION_PARAMS');
         return;
       }
       dataToRespond = validation.data; // Use validated data
@@ -243,7 +243,7 @@ export class HttpResponse<T = any> {
   error(code: HttpErrorCode) {
     const status = HTTP_SERVICE_ERROR_CODES[code];
     this.status(status).error(code);
-    return this
+    return this;
   }
 
   /**

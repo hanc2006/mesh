@@ -1,29 +1,30 @@
 // Content-Type handling demonstration
-import { ContentType, contentTypes } from "../types";
-import { createContract } from "../contract/index";
-import { z } from "zod";
+
+import { z } from 'zod';
+import { createContract } from '../contract/index';
+import { ContentType, contentTypes } from '../types';
 
 // Example showing how different content types are handled
 
 // 1. JSON content (application/json)
 export const jsonContract = createContract({
   docs: {
-    description: "Handle JSON data",
-    tags: ["demo"],
-    summary: "Process JSON request body",
+    description: 'Handle JSON data',
+    tags: ['demo'],
+    summary: 'Process JSON request body'
   },
-  method: "post",
-  path: "/api/json",
-  type: "json", // maps to application/json
+  method: 'post',
+  path: '/api/json',
+  type: 'json', // maps to application/json
   input: {
     body: {
       name: z.string(),
       age: z.number(),
-      email: z.string().email(),
+      email: z.string().email()
     },
     headers: {
-      "content-type": z.string().optional(),
-    },
+      'content-type': z.string().optional()
+    }
   },
   output: {
     200: {
@@ -31,142 +32,144 @@ export const jsonContract = createContract({
       data: z.object({
         name: z.string(),
         age: z.number(),
-        email: z.string(),
-      }),
-    },
-  },
+        email: z.string()
+      })
+    }
+  }
 });
 
-// 2. Form data (application/x-www-form-urlencoded)  
+// 2. Form data (application/x-www-form-urlencoded)
 export const formContract = createContract({
   docs: {
-    description: "Handle form data",
-    tags: ["demo"],
-    summary: "Process URL-encoded form data",
+    description: 'Handle form data',
+    tags: ['demo'],
+    summary: 'Process URL-encoded form data'
   },
-  method: "post", 
-  type: "form", // maps to application/x-www-form-urlencoded
-  path: "/api/form",
+  method: 'post',
+  type: 'form', // maps to application/x-www-form-urlencoded
+  path: '/api/form',
   input: {
-    type: "form", // maps to application/x-www-form-urlencoded
+    type: 'form', // maps to application/x-www-form-urlencoded
     body: {
       username: z.string(),
       password: z.string(),
-      remember: z.boolean().optional(),
+      remember: z.boolean().optional()
     },
     headers: {
-      "content-type": z.string().optional(),
-    },
+      'content-type': z.string().optional()
+    }
   },
   output: {
     200: {
       success: z.boolean(),
-      token: z.string(),
-    },
-  },
+      token: z.string()
+    }
+  }
 });
 
 // 3. File upload (multipart/form-data)
 export const uploadContract = createContract({
   docs: {
-    description: "Handle file uploads",
-    tags: ["demo"],
-    summary: "Process multipart form data with files",
+    description: 'Handle file uploads',
+    tags: ['demo'],
+    summary: 'Process multipart form data with files'
   },
-  type: "upload", // maps to multipart/form-data
-  method: "post",
-  path: "/api/upload",
+  type: 'upload', // maps to multipart/form-data
+  method: 'post',
+  path: '/api/upload',
   input: {
     body: {
       file: z.instanceof(File),
       description: z.string().optional(),
-      category: z.string(),
+      category: z.string()
     },
     headers: {
-      authorization: z.string().startsWith("Bearer "),
-    },
+      authorization: z.string().startsWith('Bearer ')
+    }
   },
   output: {
     201: {
       fileId: z.string(),
       filename: z.string(),
       size: z.number(),
-      url: z.string().url(),
-    },
-  },
+      url: z.string().url()
+    }
+  }
 });
 
 // 4. Binary data (application/octet-stream)
 export const binaryContract = createContract({
   docs: {
-    description: "Handle binary data",
-    tags: ["demo"],
-    summary: "Process raw binary data",
+    description: 'Handle binary data',
+    tags: ['demo'],
+    summary: 'Process raw binary data'
   },
-  method: "post",
-  path: "/api/binary",
-  type: "binary", // maps to application/octet-stream
+  method: 'post',
+  path: '/api/binary',
+  type: 'binary', // maps to application/octet-stream
   input: {
     body: {
-      data: z.instanceof(Buffer),
+      data: z.instanceof(Buffer)
     },
     headers: {
-      "content-length": z.string().optional(),
-      authorization: z.string().startsWith("Bearer "),
-    },
+      'content-length': z.string().optional(),
+      authorization: z.string().startsWith('Bearer ')
+    }
   },
   output: {
     200: {
       processed: z.boolean(),
       size: z.number(),
-      checksum: z.string(),
-    },
-  },
+      checksum: z.string()
+    }
+  }
 });
 
 // 5. Server-sent events (text/event-stream)
 export const streamContract = createContract({
   docs: {
-    description: "Handle streaming data",
-    tags: ["demo"],
-    summary: "Process server-sent events or streaming data",
+    description: 'Handle streaming data',
+    tags: ['demo'],
+    summary: 'Process server-sent events or streaming data'
   },
-  method: "post",
-  path: "/api/stream",
-  type: "stream", // maps to text/event-stream
+  method: 'post',
+  path: '/api/stream',
+  type: 'stream', // maps to text/event-stream
   input: {
     body: {
-      events: z.string(),
+      events: z.string()
     },
     headers: {
-      "cache-control": z.string().optional(),
-      authorization: z.string().startsWith("Bearer "),
-    },
+      'cache-control': z.string().optional(),
+      authorization: z.string().startsWith('Bearer ')
+    }
   },
   output: {
     200: {
       streamId: z.string(),
-      eventCount: z.number(),
-    },
-  },
+      eventCount: z.number()
+    }
+  }
 });
 
 // Utility function to demonstrate content-type mapping
 export function demonstrateContentTypeMapping() {
-  console.log("ContentType to HTTP Header Mapping:");
-  console.log("=====================================");
-  
+  console.log('ContentType to HTTP Header Mapping:');
+  console.log('=====================================');
+
   for (const [key, value] of Object.entries(contentTypes)) {
     console.log(`${key.padEnd(8)} -> ${value}`);
   }
-  
-  console.log("\nExample Usage:");
-  console.log("==============");
-  console.log("1. JSON:   POST /api/json   with Content-Type: application/json");
-  console.log("2. Form:   POST /api/form   with Content-Type: application/x-www-form-urlencoded");
-  console.log("3. Upload: POST /api/upload with Content-Type: multipart/form-data");
-  console.log("4. Binary: POST /api/binary with Content-Type: application/octet-stream");
-  console.log("5. Stream: POST /api/stream with Content-Type: text/event-stream");
+
+  console.log('\nExample Usage:');
+  console.log('==============');
+  console.log('1. JSON:   POST /api/json   with Content-Type: application/json');
+  console.log(
+    '2. Form:   POST /api/form   with Content-Type: application/x-www-form-urlencoded'
+  );
+  console.log('3. Upload: POST /api/upload with Content-Type: multipart/form-data');
+  console.log('4. Binary: POST /api/binary with Content-Type: application/octet-stream');
+  console.log('5. Stream: POST /api/stream with Content-Type: text/event-stream');
 }
 
 // Type checking examples

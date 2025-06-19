@@ -166,10 +166,10 @@ const mimes: { [key: string]: string } = {
   yml: 'text/yaml',
   zip: 'application/zip',
   default: 'text/html'
-}
+};
 
 export const getMime = (path: string) => {
   const i = path.lastIndexOf('.');
-  
+
   return mimes[path.slice(i + 1).toLowerCase()];
-}
+};

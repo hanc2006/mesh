@@ -1,11 +1,9 @@
 export const parseQuery = (query: string) => {
-  const
-    result: any = {},
+  const result: any = {},
     parts = query.split('&');
 
   parts.forEach(p => {
-    const
-      [k, v] = p.split('='),
+    const [k, v] = p.split('='),
       dkey = decodeURIComponent(k),
       key = dkey.slice(-2) === '[]' ? dkey.slice(0, -2) : dkey,
       val = decodeURIComponent(v);
@@ -16,4 +14,4 @@ export const parseQuery = (query: string) => {
   });
 
   return result;
-}
+};

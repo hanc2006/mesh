@@ -1,6 +1,6 @@
-import { Server } from "./instance";
-import { SchemaContract, Method, InferContract } from "../contract/index";
-import { Simplify } from "../types";
+import { InferContract, Method, SchemaContract } from '../contract/index';
+import { Simplify } from '../types';
+import { Server } from './instance';
 
 export type InferServerContracts<T> = T extends Server<infer Endpoints>
   ? {
