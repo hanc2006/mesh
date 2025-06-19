@@ -1,9 +1,9 @@
-import { Method, SchemaContract } from "../contract/index";
+import { Method, SchemaContract } from '../contract/index';
 import {
   MergeMiddlewareOutput,
   Middleware,
-  MiddlewareContext,
-} from "../middleware/index";
+  MiddlewareContext
+} from '../middleware/index';
 
 export function createRouter<Global extends object = {}>() {
   return new RouterBuilder<Global>();
@@ -38,7 +38,7 @@ export class RouterBuilder<D extends object = {}> {
   build() {
     return {
       middlewares: this._middlewares,
-      basePath: this._basePath,
+      basePath: this._basePath
     };
   }
 }

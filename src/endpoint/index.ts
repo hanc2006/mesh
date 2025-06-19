@@ -1,15 +1,11 @@
-import { Context } from "../context/index";
-import {
-  InferSuccessResponse,
-  Method,
-  SchemaContract,
-} from "../contract/index";
+import { Context } from '../context/index';
+import { InferSuccessResponse, Method, SchemaContract } from '../contract/index';
 import {
   MergeMiddlewareOutput,
   Middleware,
-  MiddlewareContext,
-} from "../middleware/index";
-import { RouterBuilder } from "../router";
+  MiddlewareContext
+} from '../middleware/index';
+import { RouterBuilder } from '../router';
 
 export class EndpointBuilder<
   C extends SchemaContract<Method, any, any, any, any>,
@@ -64,13 +60,13 @@ export class EndpointBuilder<
   //   return this as unknown as EndpointBuilder<C, D & MergeMiddlewareData<M>>;
   // }
 
-  router<R extends ReturnType<InstanceType<typeof RouterBuilder<D>>["build"]>>(
+  router<R extends ReturnType<InstanceType<typeof RouterBuilder<D>>['build']>>(
     router: R
-  ): EndpointBuilder<C, D & MergeMiddlewareOutput<R["middlewares"]>> {
+  ): EndpointBuilder<C, D & MergeMiddlewareOutput<R['middlewares']>> {
     this._middlewares.push(...router.middlewares);
     return this as unknown as EndpointBuilder<
       C,
-      D & MergeMiddlewareOutput<R["middlewares"]>
+      D & MergeMiddlewareOutput<R['middlewares']>
     >;
   }
 
@@ -86,7 +82,7 @@ export class EndpointBuilder<
     return {
       contract: this._contract,
       middlewares: this._middlewares,
-      handler: fn,
+      handler: fn
     };
   }
 }
@@ -110,14 +106,12 @@ export function createEndpoint<
     ctx: Context<C, MergeMiddlewareOutput<M>>
   ) => Promise<InferSuccessResponse<C>>;
 }) {
-  let builder = new EndpointBuilder<C, D & MergeMiddlewareOutput<M>>({
-    contract: opts.contract,
+  const builder = new EndpointBuilder<C, D & MergeMiddlewareOutput<M>>({
+    contract: opts.contract
   });
 
   if (opts.middlewares) {
-    builder.use(
-      Array.isArray(opts.middlewares) ? opts.middlewares : [opts.middlewares]
-    );
+    builder.use(Array.isArray(opts.middlewares) ? opts.middlewares : [opts.middlewares]);
   }
 
   return builder.handler(opts.handler);

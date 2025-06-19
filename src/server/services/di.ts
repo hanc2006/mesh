@@ -1,11 +1,7 @@
 // --- Utility types ---
 
 export type DenyInputKeys<T, Disallowed> = T extends Disallowed ? never : T;
-export type StringLiteral<T> = T extends string
-  ? string extends T
-    ? never
-    : T
-  : never;
+export type StringLiteral<T> = T extends string ? (string extends T ? never : T) : never;
 
 export type ResolvedDependencyValue = unknown;
 export type ResolvedDependencies = object;
@@ -42,16 +38,14 @@ export interface IDIContainer<CR extends object = {}> {
   update: <N extends keyof CR, R extends Factory<CR>>(
     name: StringLiteral<N>,
     resolver: R
-  ) => IDIContainer<
-    InferContainerType<{ [K in N]: ReturnType<R> } & Omit<CR, N>>
-  >;
+  ) => IDIContainer<InferContainerType<{ [K in N]: ReturnType<R> } & Omit<CR, N>>>;
   dependencyKeys: () => LiteralKeys<CR>[];
 
   dispose: () => Promise<void>;
 }
 
 // --- DI Implementation ---
-const containerMethods = ["add", "get", "extend", "update"] as const;
+const containerMethods = ['add', 'get', 'extend', 'update'] as const;
 const RESERVED_NAMES = new Set<string>(containerMethods);
 
 export class DIContainer<CR extends object = {}> {
@@ -67,7 +61,7 @@ export class DIContainer<CR extends object = {}> {
           throw new IncorrectInvocationError();
         }
         return target[name as keyof this];
-      },
+      }
     }) as unknown as CR;
   }
 
@@ -94,7 +88,7 @@ export class DIContainer<CR extends object = {}> {
   } {
     return {
       resolvedDependencies: this.resolvedDependencies,
-      resolvers: this.resolvers,
+      resolvers: this.resolvers
     };
   }
 
@@ -127,11 +121,11 @@ export class DIContainer<CR extends object = {}> {
     return new ClonedDiContainer(
       {
         ...(this.resolvers as Resolvers<CR & OCR>),
-        ...(resolvers as Resolvers<CR & OCR>),
+        ...(resolvers as Resolvers<CR & OCR>)
       },
       {
         ...(this.resolvedDependencies as Partial<CR & OCR>),
-        ...(resolvedDependencies as Partial<CR & OCR>),
+        ...(resolvedDependencies as Partial<CR & OCR>)
       }
     ) as unknown as IDIContainer<InferContainerType<CR & OCR>>;
   }
@@ -139,9 +133,7 @@ export class DIContainer<CR extends object = {}> {
   public update<N extends keyof CR, R extends Factory<CR>>(
     name: StringLiteral<N>,
     resolver: R
-  ): IDIContainer<
-    InferContainerType<{ [K in N]: ReturnType<R> } & Omit<CR, N>>
-  > {
+  ): IDIContainer<InferContainerType<{ [K in N]: ReturnType<R> } & Omit<CR, N>>> {
     if (RESERVED_NAMES.has(name)) throw new ForbiddenNameError(name);
     if (!this.has(name)) throw new DependencyIsMissingError(name);
     this.setValue(name, resolver);
@@ -156,8 +148,8 @@ export class DIContainer<CR extends object = {}> {
     for (const dep of values) {
       if (
         dep &&
-        typeof dep === "object" &&
-        typeof (dep as { dispose?: unknown }).dispose === "function"
+        typeof dep === 'object' &&
+        typeof (dep as { dispose?: unknown }).dispose === 'function'
       ) {
         await (dep as { dispose: () => void | Promise<void> }).dispose();
       }
@@ -173,7 +165,7 @@ export class DIContainer<CR extends object = {}> {
     resolved: Partial<XR>
   ) {
     if (Object.keys(this.resolvers).length > 0) {
-      throw new Error("Cannot reset resolvers after initialization.");
+      throw new Error('Cannot reset resolvers after initialization.');
     }
     this.resolvers = resolvers as unknown as Resolvers<CR>;
     this.resolvedDependencies = resolved as unknown as Partial<CR>;
@@ -185,7 +177,7 @@ export class DIContainer<CR extends object = {}> {
   private addContainerProperty(name: string) {
     if (!Object.prototype.hasOwnProperty.call(this, name)) {
       Object.defineProperty(this, name, {
-        get: () => this.get(name as keyof CR),
+        get: () => this.get(name as keyof CR)
       });
     }
   }
@@ -193,7 +185,7 @@ export class DIContainer<CR extends object = {}> {
   private setValue(name: string, resolver: Factory<CR>) {
     this.resolvers = {
       ...this.resolvers,
-      [name]: resolver,
+      [name]: resolver
     };
     this.addContainerProperty(name);
   }
@@ -238,9 +230,7 @@ export function createContainer<CR extends object = {}>() {
 }
 
 // --- Type Flattening ---
-export type InferContainerType<T> = T extends object
-  ? { [K in keyof T]: T[K] }
-  : never;
+export type InferContainerType<T> = T extends object ? { [K in keyof T]: T[K] } : never;
 
 export type InferDependency<
   T extends IDIContainer<any>,
@@ -255,7 +245,4 @@ export type InferDependencyKeyLiterals<T extends IDIContainer<any>> =
 
 type LiteralKeys<T> = Extract<keyof T, string>;
 
-export type Simplify<T> = T extends object
-  ? { [K in keyof T]: Simplify<T[K]> }
-  : T;
-
+export type Simplify<T> = T extends object ? { [K in keyof T]: Simplify<T[K]> } : T;

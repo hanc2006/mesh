@@ -1,32 +1,23 @@
-import z, { ZodObject } from "zod";
-import {
-  SchemaContract,
-  InferSchema,
-  ZodShape,
-  Method,
-} from "../contract/index";
-import { HttpRequest } from "../server/index";
-import { IncomingHeaders } from "../standard/request.header";
+import z, { ZodObject } from 'zod';
+import { InferSchema, Method, SchemaContract, ZodShape } from '../contract/index';
+import { HttpRequest } from '../server/index';
+import { IncomingHeaders } from '../standard/request.header';
 
 export type Middleware<
-  Input extends MiddlewareContext<
-    SchemaContract<Method, any, any, any, any>,
-    any
-  >,
+  Input extends MiddlewareContext<SchemaContract<Method, any, any, any, any>, any>,
   Output extends object = {}
 > = (ctx: Input & { data: Partial<Output> }) => Promise<Output>;
 
-export type MiddlewareRequest<
-  C extends SchemaContract<Method, any, any, any, any>
-> = Pick<
-  HttpRequest<
-    never,
-    InferSchema<C["query"]>,
-    InferSchema<C["params"]>,
-    InferSchema<C["headers"]>
-  >,
-  "headers" | "query" | "params" | "url"
->;
+export type MiddlewareRequest<C extends SchemaContract<Method, any, any, any, any>> =
+  Pick<
+    HttpRequest<
+      never,
+      InferSchema<C['query']>,
+      InferSchema<C['params']>,
+      InferSchema<C['headers']>
+    >,
+    'headers' | 'query' | 'params' | 'url'
+  >;
 
 export type MiddlewareContext<
   C extends SchemaContract<Method, any, any, any, any>,
@@ -52,10 +43,7 @@ export type InferMiddleware<T> = T extends (
   : never;
 
 export function middleware<
-  Input extends MiddlewareContext<
-    SchemaContract<Method, any, any, any, any>,
-    any
-  >
+  Input extends MiddlewareContext<SchemaContract<Method, any, any, any, any>, any>
 >() {
   return new MiddlewareBuilder<Input, {}, undefined>();
 }
@@ -82,7 +70,7 @@ export class MiddlewareBuilder<
   handler(
     fn: (
       ctx: {
-      headers: Record<keyof IncomingHeaders, string | string[]>;
+        headers: Record<keyof IncomingHeaders, string | string[]>;
         query: Record<string, unknown>;
         url: string;
         data: Partial<In>;
@@ -91,8 +79,7 @@ export class MiddlewareBuilder<
     ) => Promise<Out>
   ): (options: Opt extends object ? Opt : {}) => Middleware<any, Out> {
     return (options: Opt extends object ? Opt : {}) => {
-      return async (ctx) =>
-        await fn(ctx, options as Opt extends object ? Opt : {});
+      return async ctx => await fn(ctx, options as Opt extends object ? Opt : {});
     };
   }
 }
@@ -114,7 +101,7 @@ export function createMiddleware<
   ) => Promise<z.infer<ZodObject<Out>>>;
 }) {
   return (options: z.infer<ZodObject<Opt>>) => {
-    const mw: Middleware<any, z.infer<ZodObject<Out>>> = async (ctx) => {
+    const mw: Middleware<any, z.infer<ZodObject<Out>>> = async ctx => {
       return await opts.handler(ctx, options);
     };
     return mw;

@@ -1,11 +1,11 @@
 import {
-  HttpRequest as UHttpRequest,
-  HttpResponse as UHttpResponse,
   getParts,
-} from "uWebSockets.js";
-import { parseQuery } from "../utils";
-import { Method } from "../contract/index";
-import { ContentType, contentTypes } from "../types";
+  HttpRequest as UHttpRequest,
+  HttpResponse as UHttpResponse
+} from 'uWebSockets.js';
+import { Method } from '../contract/index';
+import { ContentType, contentTypes } from '../types';
+import { parseQuery } from '../utils';
 
 export interface UploadedFile {
   data: ArrayBuffer;
@@ -20,7 +20,7 @@ export class HttpRequest<TBody = any, TQuery = any, TParams = any, THeaders = an
   route: string;
 
   private bodyData: Buffer | null = null;
-  private contentType = "";
+  private contentType = '';
   private paramKeys: string[];
   private req: UHttpRequest;
   private res: UHttpResponse;
@@ -41,8 +41,7 @@ export class HttpRequest<TBody = any, TQuery = any, TParams = any, THeaders = an
    * Request body content
    */
   async body(): Promise<TBody> {
-    this.contentType =
-      this.contentType || this.req.getHeader("content-type") || "";
+    this.contentType = this.contentType || this.req.getHeader('content-type') || '';
 
     if (!this.contentType) return {} as TBody;
 
@@ -59,10 +58,10 @@ export class HttpRequest<TBody = any, TQuery = any, TParams = any, THeaders = an
    * Get the ContentType from request headers
    */
   get requestContentType(): ContentType | null {
-    const contentType = this.req.getHeader("content-type");
+    const contentType = this.req.getHeader('content-type');
     if (!contentType) return null;
-    
-    const baseContentType = contentType.split(";")[0].trim();
+
+    const baseContentType = contentType.split(';')[0].trim();
     return this.mapContentTypeToEnum(baseContentType);
   }
 
@@ -79,7 +78,7 @@ export class HttpRequest<TBody = any, TQuery = any, TParams = any, THeaders = an
    */
   async rawBody(): Promise<Buffer | null> {
     if (this.bodyData) return this.bodyData;
-    
+
     try {
       this.bodyData = await this.getBody(this.res);
       return this.bodyData;
@@ -94,7 +93,7 @@ export class HttpRequest<TBody = any, TQuery = any, TParams = any, THeaders = an
   async files(): Promise<{ [key: string]: UploadedFile | undefined }> {
     this.contentType = this.contentType
       ? this.contentType
-      : this.req.getHeader("content-type");
+      : this.req.getHeader('content-type');
 
     if (!this.contentType) return {};
 
@@ -104,16 +103,16 @@ export class HttpRequest<TBody = any, TQuery = any, TParams = any, THeaders = an
 
     if (!body?.length) return {};
 
-    if (this.contentType.startsWith("multipart/form-data")) {
+    if (this.contentType.startsWith('multipart/form-data')) {
       const data: any = {};
 
-      getParts(body, this.contentType)?.forEach((p) => {
+      getParts(body, this.contentType)?.forEach(p => {
         if (p.type && p.filename) {
-          const name = p.name.slice(-2) === "[]" ? p.name.slice(0, -2) : p.name,
+          const name = p.name.slice(-2) === '[]' ? p.name.slice(0, -2) : p.name,
             value = { data: p.data, filename: p.filename, type: p.type };
 
           if (data[name] === undefined)
-            data[name] = p.name.slice(-2) === "[]" ? [value] : value;
+            data[name] = p.name.slice(-2) === '[]' ? [value] : value;
           else if (Array.isArray(data[name])) data[name].push(value);
           else data[name] = [data[name], value];
         }
@@ -174,7 +173,7 @@ export class HttpRequest<TBody = any, TQuery = any, TParams = any, THeaders = an
   private async getBody(res: UHttpResponse): Promise<Buffer> {
     let buffer: Buffer;
 
-    return new Promise((resolve) =>
+    return new Promise(resolve =>
       res.onData((ab, isLast) => {
         const chunk = Buffer.from(ab);
 
@@ -191,61 +190,61 @@ export class HttpRequest<TBody = any, TQuery = any, TParams = any, THeaders = an
 
   private parseBodyByContentType(contentType: string, rawBody: Buffer): any {
     // Clean content type (remove charset, boundary, etc.)
-    const baseContentType = contentType.split(";")[0].trim();
-    
+    const baseContentType = contentType.split(';')[0].trim();
+
     // Map actual content-type to our ContentType system
     const mappedType = this.mapContentTypeToEnum(baseContentType);
 
     switch (mappedType) {
-      case "json":
+      case 'json':
         try {
           return JSON.parse(rawBody.toString());
         } catch (error) {
           throw new Error(`Invalid JSON body: ${error}`);
         }
 
-      case "form":
+      case 'form':
         return parseQuery(rawBody.toString());
 
-      case "upload":
+      case 'upload':
         return this.parseMultipartFormData(rawBody, contentType);
 
-      case "binary":
+      case 'binary':
         return rawBody;
 
-      case "stream":
+      case 'stream':
         // For server-sent events or streaming data
         return {
-          type: "stream",
+          type: 'stream',
           data: rawBody.toString(),
-          contentType: baseContentType,
+          contentType: baseContentType
         };
 
       default:
         // Handle other content types
-        if (baseContentType.startsWith("text/")) {
+        if (baseContentType.startsWith('text/')) {
           return {
-            type: "text",
+            type: 'text',
             data: rawBody.toString(),
-            contentType: baseContentType,
+            contentType: baseContentType
           };
         } else if (
-          baseContentType.startsWith("image/") ||
-          baseContentType.startsWith("audio/") ||
-          baseContentType.startsWith("video/")
+          baseContentType.startsWith('image/') ||
+          baseContentType.startsWith('audio/') ||
+          baseContentType.startsWith('video/')
         ) {
           return {
-            type: "media",
+            type: 'media',
             data: rawBody,
-            contentType: baseContentType,
+            contentType: baseContentType
           };
         }
 
         // Default: return raw buffer for unknown types
         return {
-          type: "unknown",
+          type: 'unknown',
           data: rawBody,
-          contentType: baseContentType,
+          contentType: baseContentType
         };
     }
   }
@@ -266,7 +265,7 @@ export class HttpRequest<TBody = any, TQuery = any, TParams = any, THeaders = an
   private parseMultipartFormData(rawBody: Buffer, contentType: string): any {
     const data: any = {};
 
-    getParts(rawBody, contentType)?.forEach((part) => {
+    getParts(rawBody, contentType)?.forEach(part => {
       if (!part.type && !part.filename) {
         // Regular form field
         data[part.name] = Buffer.from(part.data).toString();

@@ -1,4 +1,4 @@
-import { ZodLiteral, ZodObject, ZodTypeAny } from "zod";
+import { ZodLiteral, ZodObject, ZodTypeAny } from 'zod';
 
 export const HTTP_SUCCESS_CODES = {
   CONTINUE: 100,
@@ -20,7 +20,7 @@ export const HTTP_SUCCESS_CODES = {
   NOT_MODIFIED: 304,
   USE_PROXY: 305,
   TEMPORARY_REDIRECT: 307,
-  PERMANENT_REDIRECT: 308,
+  PERMANENT_REDIRECT: 308
 } as const;
 
 export const HTTP_ERROR_CODES = {
@@ -61,7 +61,7 @@ export const HTTP_ERROR_CODES = {
   GATEWAY_TIMEOUT: 504,
   HTTP_VERSION_NOT_SUPPORTED: 505,
   INSUFFICIENT_STORAGE: 507,
-  NETWORK_AUTHENTICATION_REQUIRED: 511,
+  NETWORK_AUTHENTICATION_REQUIRED: 511
 } as const;
 
 export const HTTP_SERVICE_CODES = {
@@ -77,17 +77,17 @@ export const HTTP_SERVICE_CODES = {
   ERR_VALIDATION_QUERY: 402,
   ERR_VALIDATION_PARAMS: 402,
   ERR_VALIDATION_HEADERS: 402,
-  ERR_VALIDATION_BODY: 402,
+  ERR_VALIDATION_BODY: 402
 } as const;
 
 export const HTTP_SERVICE_ERROR_CODES = {
   ...HTTP_ERROR_CODES,
-  ...HTTP_SERVICE_CODES,
+  ...HTTP_SERVICE_CODES
 } as const;
 
 export const HTTP_ALL_CODES = {
   ...HTTP_SUCCESS_CODES,
-  ...HTTP_SERVICE_ERROR_CODES,
+  ...HTTP_SERVICE_ERROR_CODES
 } as const;
 
 export type HttpSuccessCode = keyof typeof HTTP_SUCCESS_CODES;
@@ -142,6 +142,6 @@ export class HttpError<S extends HttpErrorStatus = HttpErrorStatus> extends Erro
     public text?: string
   ) {
     super(`HttpError: ${code}`);
-    this.message = text || "";
+    this.message = text || '';
   }
 }

@@ -1,29 +1,26 @@
-import { SecuritySchemeObject } from "openapi3-ts/oas31";
+import { SecuritySchemeObject } from 'openapi3-ts/oas31';
 
 export function bearerAuth(description?: string): SecuritySchemeObject {
   return {
-    type: "http",
-    scheme: "bearer",
-    bearerFormat: "JWT",
-    description,
+    type: 'http',
+    scheme: 'bearer',
+    bearerFormat: 'JWT',
+    description
   };
 }
 
 export function basicAuth(description?: string): SecuritySchemeObject {
   return {
-    type: "http",
-    scheme: "basic",
-    description,
+    type: 'http',
+    scheme: 'basic',
+    description
   };
 }
 
-export function apiKeyAuth(
-  options: any,
-  description?: string
-): SecuritySchemeObject {
+export function apiKeyAuth(options: any, description?: string): SecuritySchemeObject {
   return {
-    type: "apiKey",
+    type: 'apiKey',
     description,
-    ...options,
+    ...options
   };
 }
