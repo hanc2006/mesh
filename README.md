@@ -92,6 +92,21 @@ const routes = router.routes();
 app.routes(routes);
 ```
 
+### Contract helpers
+
+```ts
+import { json, text, xml, err } from '@ionited/mesh';
+import { z } from 'zod';
+
+const getUser = {
+  responses: {
+    200: json({ id: z.string(), name: z.string() }),
+    400: text(z.string(), 'Bad request'),
+    errors: err('INTERNAL_SERVER_ERROR')
+  }
+};
+```
+
 ### HttpRequest
 
 ```ts
