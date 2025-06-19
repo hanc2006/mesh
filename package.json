@@ -1,6 +1,7 @@
 {
   "name": "@ionited/mesh",
   "version": "0.6.5",
+  "type": "module",
   "description": "A fast web framework based on uWebSocket.js",
   "main": "./build/mesh.js",
   "scripts": {
@@ -38,6 +39,9 @@
     "tsx": "4.19.4",
     "typescript": "^5.6.3",
     "gts": "^6.0.2"
+  },
+  "engines": {
+    "node": ">=23"
   },
   "files": [
     "build/*"
