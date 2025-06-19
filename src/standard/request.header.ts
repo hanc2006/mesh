@@ -13,9 +13,6 @@ export type IncomingHeaders = {
     : K]: IncomingHttpHeaders[K];
 };
 
-
-type c = keyof IncomingHeaders;
-
 export type OutgoingHeaders = {
   [K in keyof OutgoingHttpHeaders as string extends K
     ? never
