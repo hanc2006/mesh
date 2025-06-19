@@ -8,7 +8,8 @@
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc",
-    "fix": "gts fix"
+    "fix": "gts fix",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "keywords": [
     "Web",
