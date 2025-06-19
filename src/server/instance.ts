@@ -38,6 +38,11 @@ export class Server<Endpoints extends EndpointHandler[] = []> {
   private app: TemplatedApp;
   private settings: ServerSettings;
   private logger: Logger;
+  private catchFunction?: (
+    error: any,
+    req: HttpRequest,
+    res: HttpResponse
+  ) => void | Promise<void>;
   constructor(settings: ServerSettings = {}) {
     this.app = App();
     this.settings = settings;
@@ -75,18 +80,23 @@ export class Server<Endpoints extends EndpointHandler[] = []> {
     return params ? params : [];
   }
 
-  private catch(
-  handler: (error: any, req: HttpRequest, res: HttpResponse) => void | Promise<void>
-): this {this.catchFunction = async (err, req, res) => {
-    if (!(err instanceof HttpError)) {
-      err = new HttpError("ERR_INTERNAL_SERVER_ERROR", 500);
-    }
+  public onError(
+    handler: (
+      error: any,
+      req: HttpRequest,
+      res: HttpResponse
+    ) => void | Promise<void>
+  ): this {
+    this.catchFunction = async (err, req, res) => {
+      if (!(err instanceof HttpError)) {
+        err = new HttpError("ERR_INTERNAL_SERVER_ERROR", 500);
+      }
 
-    res.status(err.status);
-    handler(err, req, res);
-  };
-  return this;
-}
+      res.status(err.status);
+      await handler(err, req, res);
+    };
+    return this;
+  }
 
   public register<E extends EndpointHandler>(
     endpoint: E
