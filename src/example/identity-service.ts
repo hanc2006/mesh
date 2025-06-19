@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 export type JsonWebKey = z.infer<typeof JsonWebKey>;
 export const JsonWebKey = z.intersection(
@@ -35,10 +35,10 @@ export type MethodEnum_phone = z.infer<typeof MethodEnum_phone>;
 export const MethodEnum_phone = z.literal("phone");
 
 export type BrandEnum = z.infer<typeof BrandEnum>;
-export const BrandEnum = z.union([z.literal("lebara"), z.literal("yallo"), z.literal("swype")]);
+export const BrandEnum = z.literal(["lebara", "yallo", "swype"]);
 
 export type LanguageEnum = z.infer<typeof LanguageEnum>;
-export const LanguageEnum = z.union([z.literal("de"), z.literal("it"), z.literal("fr"), z.literal("en")]);
+export const LanguageEnum = z.literal(["de", "it", "fr", "en"]);
 
 export type GdprLoginReq = z.infer<typeof GdprLoginReq>;
 export const GdprLoginReq = z.object({
@@ -90,11 +90,11 @@ export const PosCodeVerificationReq = z.object({
 });
 
 export type MethodEnum = z.infer<typeof MethodEnum>;
-export const MethodEnum = z.union([
-  z.literal("email"),
-  z.literal("phone"),
-  z.literal("credential"),
-  z.literal("token"),
+export const MethodEnum = z.literal([
+  "email",
+  "phone",
+  "credential",
+  "token",
 ]);
 
 export type SelfcareLoginReq = z.infer<typeof SelfcareLoginReq>;
@@ -179,7 +179,7 @@ export const AuthenticatorAssertionResponseJSON = z.object({
 });
 
 export type AuthenticatorAttachment = z.infer<typeof AuthenticatorAttachment>;
-export const AuthenticatorAttachment = z.union([z.literal("cross-platform"), z.literal("platform")]);
+export const AuthenticatorAttachment = z.literal(["cross-platform", "platform"]);
 
 export type CredentialPropertiesOutput = z.infer<typeof CredentialPropertiesOutput>;
 export const CredentialPropertiesOutput = z.object({

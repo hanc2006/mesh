@@ -11,7 +11,7 @@ const testContract = createContract({
     // type: "json", // This should be preserved as contentType
     // body: {
     //   name: z.string(),
-    //   email: z.string().email(),
+    //   email: z.email(),
     // },
     headers: {
       authorization: z.string().optional(),
@@ -45,7 +45,7 @@ const uploadContract = createContract({
   type: "upload", // This should be preserved as contentType
   input: {
     body: {
-      file: z.instanceof(File),
+      file: z.file(),
       description: z.string().optional(),
     },
     headers: {
