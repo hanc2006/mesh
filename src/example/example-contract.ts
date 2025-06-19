@@ -20,8 +20,8 @@ export const getUserContract = createContract({
     200: {
       id: z.string(),
       name: z.string(),
-      email: z.string().email(),
-      createdAt: z.string().datetime(),
+      email: z.email(),
+      createdAt: z.iso.datetime(),
     },
   },
   errors: {
@@ -46,7 +46,7 @@ export const createUserContract = createContract({
   input: {
     body: {
       name: z.string().min(1),
-      email: z.string().email(),
+      email: z.email(),
       password: z.string().min(8),
     },
     headers: {
@@ -77,7 +77,7 @@ export const uploadAvatarContract = createContract({
   type: "upload", // Explicitly set ContentType to upload
   input: {
     body: {
-      avatar: z.instanceof(File), // File upload
+      avatar: z.file(), // File upload
       description: z.string().optional(),
     },
     params: { id: z.string() },
@@ -88,7 +88,7 @@ export const uploadAvatarContract = createContract({
   output: {
     200: {
       id: z.string(),
-      avatarUrl: z.string().url(),
+      avatarUrl: z.url(),
       message: z.string(),
     },
   },
@@ -109,7 +109,7 @@ export const loginContract = createContract({
   type: "form", // Explicitly set ContentType to form
   input: {
     body: {
-      email: z.string().email(),
+      email: z.email(),
       password: z.string(),
       remember: z.boolean().optional(),
     },
@@ -156,7 +156,7 @@ export const uploadDocumentContract = createContract({
       id: z.string(),
       filename: z.string(),
       size: z.number(),
-      uploadedAt: z.string().datetime(),
+      uploadedAt: z.iso.datetime(),
     },
   },
   errors: {
@@ -186,7 +186,7 @@ export const createNoteContract = createContract({
     201: {
       id: z.string(),
       content: z.string(),
-      createdAt: z.string().datetime(),
+      createdAt: z.iso.datetime(),
     },
   },
   errors: {

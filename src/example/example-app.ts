@@ -1,5 +1,5 @@
 // main.ts
-import z from "zod";
+import { z } from "zod";
 import { Server } from "../server/instance";
 import { createContract } from "../contract/index";
 import { createEndpoint } from "../endpoint/index";

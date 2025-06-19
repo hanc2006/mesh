@@ -1,8 +1,6 @@
 import type { IncomingHttpHeaders, OutgoingHttpHeaders } from "node:http2";
 import { ZodShape } from "../contract";
-import { z, ZodType, ZodUnion } from "zod";
-import { keyof, ZodArray, ZodString } from "zod/v4";
-import { partial } from "zod/v4-mini";
+import { z, ZodType, ZodUnion, keyof, ZodArray, ZodString } from "zod";
 
 
 export type IncomingHeaders = {
@@ -14,9 +12,6 @@ export type IncomingHeaders = {
     ? never
     : K]: IncomingHttpHeaders[K];
 };
-
-
-type c = keyof IncomingHeaders;
 
 export type OutgoingHeaders = {
   [K in keyof OutgoingHttpHeaders as string extends K

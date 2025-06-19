@@ -10,7 +10,7 @@ const jsonContract = createContract({
     type: "json",
     body: {
       name: z.string(),
-      email: z.string().email(),
+      email: z.email(),
     },
     headers: {
       authorization: z.string().startsWith("Bearer "),

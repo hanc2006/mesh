@@ -1,4 +1,4 @@
-import z, { ZodObject } from 'zod';
+import { z, ZodObject } from "zod";
 import {
   SchemaContract,
   InferSchema,
