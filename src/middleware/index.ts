@@ -3,11 +3,11 @@ import {
   SchemaContract,
   InferSchema,
   ZodShape,
-  Method,
-} from "../contract/index";
-import { HttpRequest } from "../server/index";
-import { IncomingHeaders } from "../standard/request.header";
-import { UnionToIntersection } from "../types";
+  Method
+} from '../contract/index';
+import { HttpRequest } from '../server/index';
+import { IncomingHeaders } from '../standard/request.header';
+import { UnionToIntersection } from '../types';
 
 export type Middleware<
   Input extends MiddlewareContext<
